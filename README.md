@@ -1,7 +1,5 @@
 # Game Project
 
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-
 ## Description
 
 A web-based game application where two players can compete against each other by making their choices. The game uses Firebase for real-time updates and a countdown timer to add excitement.
