@@ -1,70 +1,96 @@
-# Getting Started with Create React App
+# Game Project
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-## Available Scripts
+## Description
 
-In the project directory, you can run:
+A web-based game application where two players can compete against each other by making their choices. The game uses Firebase for real-time updates and a countdown timer to add excitement.
 
-### `npm start`
+## Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- Real-time game updates using Firebase
+- Countdown timer for each game round
+- Automatic determination of game winner
+- Modal display for game results
+- Option to play again or end the game
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Demo
 
-### `npm test`
+Include a screenshot or link to a live demo if available.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Installation
 
-### `npm run build`
+1. Clone the repository:
+   ```sh
+   git clone https://github.com/your-username/your-repository.git
+2. Navigate to the project directory:
+   ```sh
+   cd your-repository
+3. Install dependencies:
+   ```sh
+   npm install
+## Usage
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. Start the development server:
+	  ```sh
+	   npm start 
+2. Open your browser and navigate to `http://localhost:3000`.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Configuration
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Explain any configuration options and how to set them up.
 
-### `npm run eject`
+## Firebase Setup
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+1.  Create a Firebase project at Firebase Console.
+2.  Add a new web app and copy the Firebase configuration details.
+3.  Create a `.env` file in the root directory and add your Firebase configuration:
+    
+    ```sh
+    REACT_APP_API_KEY=your-api-key
+    REACT_APP_AUTH_DOMAIN=your-auth-domain
+    REACT_APP_DATABASE_URL=your-database-url
+    REACT_APP_PROJECT_ID=your-project-id
+    REACT_APP_STORAGE_BUCKET=your-storage-bucket
+    REACT_APP_MESSAGING_SENDER_ID=your-messaging-sender-id
+    REACT_APP_APP_ID=your-app-id`
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Components
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### Game
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+-   **Description:** Manages the game logic and user interface.
+-   **Props:**
+    -   `player1` (string): Username of player 1.
+    -   `player2` (string): Username of player 2.
+-   **State:**
+    -   `choice1` (string): Choice of player 1.
+    -   `choice2` (string): Choice of player 2.
+    -   `winner` (string): Winner of the game.
+    -   `modalIsOpen` (boolean): State to control the visibility of the modal.
+    -   `timer` (number): Countdown timer for the game.
 
-## Learn More
+## Modal
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+The modal displays the game result and provides options to play again or end the game.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+**Styled Components:**
 
-### Code Splitting
+-   `GameContainer`: Styles the main game container.
+-   `GameHeader`: Styles the game header.
+-   `GameChoices`: Styles the buttons for player choices.
+-   `GameResult`: Styles the text displaying player choices.
+-   `GameTimer`: Styles the countdown timer.
+-   `GameModal`: Styles the modal.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### Functions
 
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+-   `handleChoice`: Updates the player's choice in Firebase.
+-   `determineWinner`: Determines the winner based on player choices.
+-   `endGame`: Ends the game, updates the winner's score, and sets the EndGame flag.
+-   `closeModal`: Closes the modal and navigates to the lobby.
+-   `playAgain`: Resets the game choices and timer for a new round.
+-   `useEffect` hooks:
+    -   Initializes the game and sets the timer.
+    -   Monitors changes in player choices to determine the winner.
+    -   Handles the countdown timer logic.
