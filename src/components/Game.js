@@ -171,6 +171,7 @@ function Game({ player1, player2 }) {
 
   const determineWinner = () => {
     if (choice1 === choice2) return 'draw';
+    if (!choice1 || !choice2) return 'draw';
     if (
       (choice1 === 'rock' && choice2 === 'scissors') ||
       (choice1 === 'scissors' && choice2 === 'paper') ||
@@ -183,28 +184,29 @@ function Game({ player1, player2 }) {
   };
 
   const endGame = () => {
-    const result = determineWinner();
-    setWinner(result);
-
-    if (result !== 'draw') {
-      const playerRef = ref(rtdb, `players/${result}`);
-      update(playerRef, {
-        score: increment(1)
-      }).then(() => {
-        console.log(`Score updated successfully for ${result}`);
+    if (!winner) {
+      const result = determineWinner();
+      setWinner(result);
+      if (result !== 'draw' && !winner) {
+        const playerRef = ref(rtdb, `players/${result}`);
+        update(playerRef, {
+          score: increment(1)
+        }).then(() => {
+          console.log(`Score updated successfully for ${result}`);
+        }).catch((error) => {
+          console.error(`Error updating score for ${result}:`, error);
+        });
+      }
+  
+      const gameRef = ref(rtdb, `games/${gameId}`);
+      update(gameRef, { EndGame: true }).then(() => {
+        console.log(`EndGame flag set to true for ${gameId}`);
       }).catch((error) => {
-        console.error(`Error updating score for ${result}:`, error);
+        console.error(`Error setting EndGame flag for ${gameId}:`, error);
       });
+  
+      setIsOpen(true);
     }
-
-    const gameRef = ref(rtdb, `games/${gameId}`);
-    update(gameRef, { EndGame: true }).then(() => {
-      console.log(`EndGame flag set to true for ${gameId}`);
-    }).catch((error) => {
-      console.error(`Error setting EndGame flag for ${gameId}:`, error);
-    });
-
-    setIsOpen(true);
   };
 
   const closeModal = () => {
@@ -231,10 +233,10 @@ function Game({ player1, player2 }) {
   };
 
   useEffect(() => {
-    if (choice1 && choice2) {
+    if (choice1 && choice2 && !winner) {
       endGame();
     }
-  }, [choice1, choice2]);
+  }, [choice1, choice2,winner]);
 
   useEffect(() => {
     let countdown;

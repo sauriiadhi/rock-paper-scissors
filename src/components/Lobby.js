@@ -39,6 +39,16 @@ const UserInfo = styled.div`
   border-radius: 8px;
   margin-bottom: 20px;
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+
+  button{
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    padding:10px 20px;
+    color: white;
+    background: linear-gradient(-60deg, green 50%, blue 50%);
+    border-radius: 16px;
+    }
 `;
 
 const Leaderboard = styled.div`
@@ -284,7 +294,7 @@ function Lobby({ username, setOpponent }) {
           }}>Accept Invitation</button>
         )}
       </UserInfo>
-      <WarnContainer>PLEASE MAKE SURE BOTH TABS OR PLAYER ARE ACTIVE SO THAT OTHER CAN SEE YOU ONLINE <br/> IF U TAB IS NOT OPENED YOU ARE CONSIDERED AS OFFLINE</WarnContainer>
+      <WarnContainer>Please ensure that both tabs or players are active so that others can see you online.(like split screen) If your tab is not opened, you will be considered offline.</WarnContainer>
       {waitingList.length > 0 && (
         <OnlinePlayers>
           <h2>Online Players</h2>

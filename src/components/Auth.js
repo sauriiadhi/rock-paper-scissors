@@ -101,7 +101,7 @@ function Auth({ setUsername }) {
 
   return (
     <AuthContainer>
-      <WarnContainer>PLEASE MAKE SURE BOTH TABS OR PLAYER ARE ACTIVE SO THAT OTHER CAN SEE YOU ONLINE <br/> IF U TAB IS NOT OPENED YOU ARE CONSIDERED AS OFFLINE</WarnContainer>
+      <WarnContainer>Please ensure that both tabs or players are active so that others can see you online.(like split screen) If your tab is not opened, you will be considered offline.</WarnContainer>
       <AuthTitle>Enter your username to join the game</AuthTitle>
       <AuthForm onSubmit={handleSubmit}>
         <AuthInput
