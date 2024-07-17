@@ -1,7 +1,5 @@
-// src/App.js
-
 import React, { useEffect, useState } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route,useNavigate } from 'react-router-dom';
 import Auth from './components/Auth';
 import Lobby from './components/Lobby';
 import Game from './components/Game';
@@ -11,12 +9,14 @@ import { handleVisibilityChange } from './visibilityHandler';
 function App() {
   const [username, setUsername] = useState('');
   const [opponent, setOpponent] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const storedUsername = sessionStorage.getItem('username');
     if (storedUsername) {
       setUsername(storedUsername);
       handleVisibilityChange(storedUsername);
+      navigate('/lobby');
     }
   }, []);
 

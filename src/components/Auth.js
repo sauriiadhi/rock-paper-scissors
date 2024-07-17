@@ -1,5 +1,3 @@
-// src/components/Auth.js
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ref, set, get, update } from 'firebase/database';
@@ -7,7 +5,6 @@ import { rtdb } from '../firebase';
 import { handleVisibilityChange } from '../visibilityHandler';
 import styled from 'styled-components';
 
-// Styled components
 const AuthContainer = styled.div`
   max-width: 400px;
   margin: 0 auto;
@@ -104,6 +101,7 @@ function Auth({ setUsername }) {
 
   return (
     <AuthContainer>
+      <WarnContainer>PLEASE MAKE SURE BOTH TABS OR PLAYER ARE ACTIVE SO THAT OTHER CAN SEE YOU ONLINE <br/> IF U TAB IS NOT OPENED YOU ARE CONSIDERED AS OFFLINE</WarnContainer>
       <AuthTitle>Enter your username to join the game</AuthTitle>
       <AuthForm onSubmit={handleSubmit}>
         <AuthInput

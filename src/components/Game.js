@@ -1,13 +1,10 @@
-// src/components/Game.js
-
 import React, { useEffect, useState } from 'react';
 import { ref, update, increment, remove, serverTimestamp, onValue } from 'firebase/database';
 import { rtdb } from '../firebase';
 import { useNavigate } from 'react-router-dom';
-import  Modal from 'react-modal';
+import Modal from 'react-modal';
 import styled from 'styled-components';
 
-// Modal styles
 const customStyles = {
   content: {
     top: '50%',
@@ -19,7 +16,6 @@ const customStyles = {
   },
 };
 
-// Styled components
 const GameContainer = styled.div`
   max-width: 600px;
   margin: 0 auto;
@@ -140,8 +136,13 @@ function Game({ player1, player2 }) {
     const unsubscribe = onValue(gameRef, (snapshot) => {
       const gameData = snapshot.val();
       if (gameData) {
-        setChoice1(gameData[player1]?.choice || '');
-        setChoice2(gameData[player2]?.choice || '');
+        if(player1){
+          setChoice1(gameData[player1]?.choice);
+          setChoice2(gameData[player2]?.choice);
+        }else{
+          setChoice1(gameData[player2]?.choice);
+          setChoice2(gameData[player1]?.choice);
+        }
         if (gameData.EndGame) {
           setIsOpen(true); // Open modal if EndGame is true
         }
@@ -203,7 +204,7 @@ function Game({ player1, player2 }) {
       console.error(`Error setting EndGame flag for ${gameId}:`, error);
     });
 
-    setIsOpen(true); // Open the modal
+    setIsOpen(true);
   };
 
   const closeModal = () => {
@@ -217,12 +218,12 @@ function Game({ player1, player2 }) {
       [player1]: { choice: '' },
       [player2]: { choice: '' },
       EndGame: false,
-      startTime: serverTimestamp() // Reset start time on play again
+      startTime: serverTimestamp()
     }).then(() => {
       setChoice1('');
       setChoice2('');
       setIsOpen(false);
-      setTimer(30); // Reset timer
+      setTimer(30); 
       console.log('Choices reset successfully');
     }).catch((error) => {
       console.error('Error resetting choices:', error);
@@ -235,21 +236,20 @@ function Game({ player1, player2 }) {
     }
   }, [choice1, choice2]);
 
-  // Timer effect
   useEffect(() => {
+    let countdown;
     if (timer > 0) {
-      const countdown = setTimeout(() => setTimer(timer - 1), 1000);
-      return () => clearTimeout(countdown);
+      countdown = setTimeout(() => setTimer(timer - 1), 1000);
     } else {
       if (!choice1 || !choice2) {
         endGame();
       }
     }
+    return () => clearTimeout(countdown); 
   }, [timer, choice1, choice2]);
 
-  // Delete game data and reset on modal open
   useEffect(() => {
-    if (modalIsOpen) {
+    if (!modalIsOpen) {
       const gameRef = ref(rtdb, `games/${gameId}`);
       remove(gameRef).then(() => {
         console.log(`Game data deleted successfully for ${gameId}`);
@@ -258,37 +258,37 @@ function Game({ player1, player2 }) {
       });
     }
   }, [modalIsOpen, gameId]);
-
+console.log(choice1,choice2)
   return (
     <GameContainer>
       <GameHeader>{player1} vs {player2}</GameHeader>
       <div>
         <GameResult>{player1}'s choice: {choice1 || 'Waiting...'}</GameResult>
-        <GameResult>{player2}'s choice: {choice2 || 'Waiting...'}</GameResult>
+        <GameResult>{player2}'s choice: {choice2 || 'Waiting for them to make choice...'}</GameResult>
       </div>
       <GameChoices>
-        <button onClick={() => handleChoice(player1, 'rock')} disabled={!!choice1}>Rock</button>
-        <button onClick={() => handleChoice(player1, 'paper')} disabled={!!choice1}>Paper</button>
-        <button onClick={() => handleChoice(player1, 'scissors')} disabled={!!choice1}>Scissors</button>
+        <button onClick={() => handleChoice(player1, 'rock')} disabled={choice1}>Rock</button>
+        <button onClick={() => handleChoice(player1, 'paper')} disabled={choice1}>Paper</button>
+        <button onClick={() => handleChoice(player1, 'scissors')} disabled={choice1}>Scissors</button>
       </GameChoices>
       <GameTimer>Time left: {timer} seconds</GameTimer>
 
       <Modal
-  isOpen={modalIsOpen}
-  onRequestClose={closeModal}
-  style={customStyles}
-  contentLabel="End Game Modal"
->
-  <ModalContent>
-    <ModalHeader>{winner === 'draw' ? 'It\'s a draw!' : `${winner} wins!`}</ModalHeader>
-    <GameResult>{player1}'s choice: {choice1}</GameResult>
-    <GameResult>{player2}'s choice: {choice2}</GameResult>
-    <ButtonContainer>
-      <button onClick={playAgain}>Play Again</button>
-      <button onClick={closeModal}>End Game</button>
-    </ButtonContainer>
-  </ModalContent>
-</Modal>
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        style={customStyles}
+        contentLabel="End Game Modal"
+      >
+        <ModalContent>
+          <ModalHeader>{winner === 'draw' ? 'It\'s a draw!' : `${winner} wins!`}</ModalHeader>
+          <GameResult>{player1}'s choice: {choice1}</GameResult>
+          <GameResult>{player2}'s choice: {choice2}</GameResult>
+          <ButtonContainer>
+            <button onClick={playAgain}>Play Again</button>
+            <button onClick={closeModal}>Close</button>
+          </ButtonContainer>
+        </ModalContent>
+      </Modal>
     </GameContainer>
   );
 }

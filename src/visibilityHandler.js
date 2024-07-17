@@ -1,5 +1,3 @@
-// src/visibilityHandler.js
-
 import { ref, update } from 'firebase/database';
 import { rtdb } from './firebase';
 
@@ -15,8 +13,7 @@ export const handleVisibilityChange = (username) => {
   window.addEventListener('beforeunload', () => {
     update(userStatusRef, { active: false });
   });
-
-  // Set user as active initially
+  
   update(userStatusRef, { active: true });
 
   return () => {

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { rtdb } from '../firebase';
-import { ref, onValue, off, set } from 'firebase/database'; // Import off from Firebase
+import { ref, onValue, off, set } from 'firebase/database';
 
 import Modal from 'react-modal';
 
-// Modal styles
+
 const customStyles = {
   content: {
     top: '50%',

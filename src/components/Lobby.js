@@ -5,7 +5,11 @@ import { rtdb } from '../firebase';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
-// Modal styles
+const WarnContainer = styled.p`
+background: red;
+    border-radius: 4px;
+    color: white;
+    padding: 7px;`;
 const customStyles = {
   content: {
     top: '50%',
@@ -14,17 +18,15 @@ const customStyles = {
     bottom: 'auto',
     marginRight: '-50%',
     transform: 'translate(-50%, -50%)',
-    maxWidth: '400px', // Adjusted max-width for better modal appearance
-    padding: '20px', // Added padding for modal content
-    borderRadius: '8px', // Rounded corners for modal
-    boxShadow: '0 4px 8px rgba(0,0,0,0.1)', // Added subtle box shadow
+    maxWidth: '400px',
+    padding: '20px',
+    borderRadius: '8px',
+    boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
   },
 };
 
-// Set the app element for react-modal
 Modal.setAppElement('#root');
 
-// Styled components
 const LobbyContainer = styled.div`
   max-width: 800px;
   margin: 0 auto;
@@ -215,6 +217,8 @@ function Lobby({ username, setOpponent }) {
 
           setInviteTimeout(timeout);
           closeInviteModal();
+          setOpponent(selectedPlayer.name);
+          navigate('/game');
         })
         .catch((error) => {
           console.error(`Error sending invite to ${selectedPlayer.name}:`, error);
@@ -242,13 +246,13 @@ function Lobby({ username, setOpponent }) {
 
   const declineInvite = () => {
     if (invitedPlayer) {
-      clearInviteTimeout(); // Clear the timeout when declining
+      clearInviteTimeout();
       const playerRef = ref(rtdb, `players/${username}`);
       update(playerRef, { inviteReceived: null })
         .then(() => {
           console.log(`Declined invite from ${invitedPlayer}`);
-          setInvitedPlayer(null); // Clear invited player state
-          closeInviteModal(); // Close invite modal
+          setInvitedPlayer(null);
+          closeInviteModal();
         })
         .catch((error) => {
           console.error(`Error declining invite from ${invitedPlayer}:`, error);
@@ -280,19 +284,7 @@ function Lobby({ username, setOpponent }) {
           }}>Accept Invitation</button>
         )}
       </UserInfo>
-
-      <Leaderboard>
-        <h2>Leaderboard</h2>
-        <ul>
-          {players.map(player => (
-            <li key={player.name}>
-              {player.name} {player.name === username ? '(You)' : ''} - Score: {player.score}
-              {player.active ? ' - Active' : ' - Inactive'}
-            </li>
-          ))}
-        </ul>
-      </Leaderboard>
-
+      <WarnContainer>PLEASE MAKE SURE BOTH TABS OR PLAYER ARE ACTIVE SO THAT OTHER CAN SEE YOU ONLINE <br/> IF U TAB IS NOT OPENED YOU ARE CONSIDERED AS OFFLINE</WarnContainer>
       {waitingList.length > 0 && (
         <OnlinePlayers>
           <h2>Online Players</h2>
@@ -311,6 +303,20 @@ function Lobby({ username, setOpponent }) {
           </ul>
         </OnlinePlayers>
       )}
+
+      <Leaderboard>
+        <h2>Leaderboard</h2>
+        <ul>
+          {players.map(player => (
+            <li key={player.name}>
+              {player.name} {player.name === username ? '(You)' : ''} - Score: {player.score}
+              {player.active ? ' - Active' : ' - Inactive'}
+            </li>
+          ))}
+        </ul>
+      </Leaderboard>
+
+      
 
       <Modal
         isOpen={inviteModalIsOpen}
