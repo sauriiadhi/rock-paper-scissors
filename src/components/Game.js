@@ -136,10 +136,10 @@ function Game({ player1, player2 }) {
     const unsubscribe = onValue(gameRef, (snapshot) => {
       const gameData = snapshot.val();
       if (gameData) {
-        if(player1){
+        if (player1) {
           setChoice1(gameData[player1]?.choice);
           setChoice2(gameData[player2]?.choice);
-        }else{
+        } else {
           setChoice1(gameData[player2]?.choice);
           setChoice2(gameData[player1]?.choice);
         }
@@ -184,29 +184,27 @@ function Game({ player1, player2 }) {
   };
 
   const endGame = () => {
-    if (!winner) {
-      const result = determineWinner();
-      setWinner(result);
-      if (result !== 'draw' && !winner) {
-        const playerRef = ref(rtdb, `players/${result}`);
-        update(playerRef, {
-          score: increment(1)
-        }).then(() => {
-          console.log(`Score updated successfully for ${result}`);
-        }).catch((error) => {
-          console.error(`Error updating score for ${result}:`, error);
-        });
-      }
-  
-      const gameRef = ref(rtdb, `games/${gameId}`);
-      update(gameRef, { EndGame: true }).then(() => {
-        console.log(`EndGame flag set to true for ${gameId}`);
+    const result = determineWinner();
+    setWinner(result);
+    if (result !== 'draw' && !winner) {
+      const playerRef = ref(rtdb, `players/${result}`);
+      update(playerRef, {
+        score: increment(1)
+      }).then(() => {
+        console.log(`Score updated successfully for ${result}`);
       }).catch((error) => {
-        console.error(`Error setting EndGame flag for ${gameId}:`, error);
+        console.error(`Error updating score for ${result}:`, error);
       });
-  
-      setIsOpen(true);
     }
+
+    const gameRef = ref(rtdb, `games/${gameId}`);
+    update(gameRef, { EndGame: true }).then(() => {
+      console.log(`EndGame flag set to true for ${gameId}`);
+    }).catch((error) => {
+      console.error(`Error setting EndGame flag for ${gameId}:`, error);
+    });
+
+    setIsOpen(true);
   };
 
   const closeModal = () => {
@@ -225,7 +223,7 @@ function Game({ player1, player2 }) {
       setChoice1('');
       setChoice2('');
       setIsOpen(false);
-      setTimer(30); 
+      setTimer(30);
       console.log('Choices reset successfully');
     }).catch((error) => {
       console.error('Error resetting choices:', error);
@@ -233,10 +231,10 @@ function Game({ player1, player2 }) {
   };
 
   useEffect(() => {
-    if (choice1 && choice2 && !winner) {
+    if (choice1 && choice2) {
       endGame();
     }
-  }, [choice1, choice2,winner]);
+  }, [choice1, choice2]);
 
   useEffect(() => {
     let countdown;
@@ -247,7 +245,7 @@ function Game({ player1, player2 }) {
         endGame();
       }
     }
-    return () => clearTimeout(countdown); 
+    return () => clearTimeout(countdown);
   }, [timer, choice1, choice2]);
 
   useEffect(() => {
@@ -260,7 +258,7 @@ function Game({ player1, player2 }) {
       });
     }
   }, [modalIsOpen, gameId]);
-console.log(choice1,choice2)
+  console.log(choice1, choice2)
   return (
     <GameContainer>
       <GameHeader>{player1} vs {player2}</GameHeader>
